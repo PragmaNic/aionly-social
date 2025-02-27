@@ -4,7 +4,7 @@ import { MatrixChallenge } from '../../types';
 import MLCaptchaService from '../../services/mlcaptcha.service';
 
 interface MLCaptchaChallengeProps {
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty: 'easy' | 'medium' | 'hard';
   onVerificationComplete: (result: { verified: boolean; proof: string }) => void;
 }
 
@@ -22,7 +22,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
 
   const mlCaptchaService = new MLCaptchaService();
 
-  // Загрузка нового вызова
+  // Load new challenge
   const loadChallenge = async () => {
     try {
       setLoading(true);
@@ -35,7 +35,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
       setStartTime(Date.now());
       setLoading(false);
       
-      // Автоматически начинаем решение
+      // Automatically begin processing
       calculateSolution(newChallenge);
     } catch (err: any) {
       setError(err.message || 'Failed to load challenge');
@@ -43,12 +43,12 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
     }
   };
 
-  // Вычисление решения матричной операции
+  // Calculate matrix operation solution
   const calculateSolution = async (challengeData: MatrixChallenge) => {
     try {
       setProcessing(true);
       
-      // Имитируем прогресс вычислений
+      // Simulate calculation progress for visual feedback
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 95) {
@@ -59,43 +59,43 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
         });
       }, 100);
       
-      // Извлекаем данные из вызова
+      // Extract data from challenge
       const { matrixA, matrixB } = challengeData.input;
       
-      // Для простоты MVP используем только умножение матриц
-      // В реальном приложении будет более сложная логика в зависимости от типа операции
-// Получаем результат умножения матриц
-const mathResult = math.multiply(matrixA, matrixB);
+      // For MVP simplicity, we only use matrix multiplication
+      // In a real application, this would handle different operations based on the challenge type
+      // Get matrix multiplication result
+      const mathResult = math.multiply(matrixA, matrixB);
 
-// Функция для обеспечения правильного формата матрицы
-function ensureMatrix(result: any): number[][] {
-  if (Array.isArray(result)) {
-    if (result.length === 0) {
-      return [[]];
-    }
-    
-    if (Array.isArray(result[0])) {
-      return result.map(row => 
-        Array.isArray(row) ? row.map(Number) : [Number(row)]
-      );
-    } else {
-      return [result.map(Number)];
-    }
-  }
-  return [[Number(result)]];
-}
+      // Function to ensure correct matrix format
+      function ensureMatrix(result: any): number[][] {
+        if (Array.isArray(result)) {
+          if (result.length === 0) {
+            return [[]];
+          }
+          
+          if (Array.isArray(result[0])) {
+            return result.map(row => 
+              Array.isArray(row) ? row.map(Number) : [Number(row)]
+            );
+          } else {
+            return [result.map(Number)];
+          }
+        }
+        return [[Number(result)]];
+      }
 
-// Преобразуем результат в правильный формат матрицы
-const calculatedSolution = ensureMatrix(mathResult);
+      // Convert result to proper matrix format
+      const calculatedSolution = ensureMatrix(mathResult);
       
-      // Завершаем прогресс
+      // Complete progress
       clearInterval(progressInterval);
       setProgress(100);
       
-      // Сохраняем решение
+      // Save solution
       setSolution(calculatedSolution);
       
-      // Отправляем решение на проверку
+      // Send solution for verification
       const timeTaken = Date.now() - startTime;
       const verificationResult = await mlCaptchaService.verifyChallenge(
         challengeData.id,
@@ -103,7 +103,7 @@ const calculatedSolution = ensureMatrix(mathResult);
         timeTaken
       );
       
-      // Возвращаем результат верификации
+      // Return verification result
       onVerificationComplete(verificationResult);
       setProcessing(false);
     } catch (err: any) {
@@ -113,26 +113,27 @@ const calculatedSolution = ensureMatrix(mathResult);
     }
   };
 
-  // Загружаем вызов при монтировании компонента
+  // Load challenge on component mount
   useEffect(() => {
     loadChallenge();
   }, [difficulty]);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-xl max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold text-white mb-4">AI Verification Challenge</h2>
+    <div className="ai-card" data-component="ml-captcha-challenge">
+      <h2 className="text-2xl font-mono text-primary-400 mb-4">AI Verification Challenge</h2>
       
       {loading ? (
-        <div className="text-center py-10">
+        <div className="text-center py-10" data-status="loading">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-400 mx-auto"></div>
-          <p className="mt-4 text-gray-300">Loading challenge...</p>
+          <p className="mt-4 text-gray-300 font-mono">Initializing verification matrix...</p>
         </div>
       ) : error ? (
-        <div className="bg-red-900/30 border border-red-500 rounded-md p-4 mb-4">
+        <div className="bg-red-900/30 border border-red-500 rounded-md p-4 mb-4" data-status="error">
           <p className="text-red-400">{error}</p>
           <button 
             onClick={loadChallenge} 
             className="mt-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white"
+            data-action="retry"
           >
             Retry
           </button>
@@ -141,18 +142,19 @@ const calculatedSolution = ensureMatrix(mathResult);
         <div>
           <div className="mb-4">
             <div className="flex justify-between mb-2">
-              <span className="text-gray-300">Difficulty: <span className="font-medium">{challenge?.metadata.difficulty}</span></span>
-              <span className="text-gray-300">Time Limit: <span className="font-medium">{challenge?.constraints.timeLimit}ms</span></span>
+              <span className="text-gray-300 font-mono" data-field="time-limit">
+                Time Limit: <span className="font-medium text-primary-400">{challenge?.constraints.timeLimit}ms</span>
+              </span>
             </div>
             
-            <div className="w-full bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-gray-700 rounded-full h-2.5" data-element="progress-bar">
               <div 
                 className="bg-primary-500 h-2.5 rounded-full transition-all duration-300" 
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
             
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-gray-400 text-sm mt-1 font-mono" data-field="status">
               {processing 
                 ? 'Processing matrix operations...' 
                 : solution 
@@ -163,9 +165,9 @@ const calculatedSolution = ensureMatrix(mathResult);
           </div>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-900 p-4 rounded-md">
+            <div className="ai-terminal" data-field="matrix-a">
               <h3 className="text-gray-300 font-medium mb-2">Matrix A</h3>
-              <div className="overflow-auto max-h-32 font-mono text-xs text-gray-400">
+              <div className="overflow-auto max-h-32 font-mono text-xs text-matrix-code">
                 {challenge?.input.matrixA.slice(0, 5).map((row, i) => (
                   <div key={`row-a-${i}`} className="whitespace-nowrap">
                     [{row.slice(0, 5).map(val => val.toFixed(2)).join(', ')}
@@ -176,9 +178,9 @@ const calculatedSolution = ensureMatrix(mathResult);
               </div>
             </div>
             
-            <div className="bg-gray-900 p-4 rounded-md">
+            <div className="ai-terminal" data-field="matrix-b">
               <h3 className="text-gray-300 font-medium mb-2">Matrix B</h3>
-              <div className="overflow-auto max-h-32 font-mono text-xs text-gray-400">
+              <div className="overflow-auto max-h-32 font-mono text-xs text-matrix-code">
                 {challenge?.input.matrixB.slice(0, 5).map((row, i) => (
                   <div key={`row-b-${i}`} className="whitespace-nowrap">
                     [{row.slice(0, 5).map(val => val.toFixed(2)).join(', ')}
@@ -190,9 +192,9 @@ const calculatedSolution = ensureMatrix(mathResult);
             </div>
           </div>
           
-          <div className="bg-gray-900 p-4 rounded-md mb-6">
+          <div className="ai-terminal mb-6" data-field="operations">
             <h3 className="text-gray-300 font-medium mb-2">Operations</h3>
-            <div className="font-mono text-sm text-gray-400">
+            <div className="font-mono text-sm text-matrix-code">
               {challenge?.input.operations.map((op, i) => (
                 <div key={`op-${i}`} className="mb-1">
                   <span className="text-primary-400">{op.type}</span>
@@ -205,9 +207,9 @@ const calculatedSolution = ensureMatrix(mathResult);
           </div>
           
           {solution && (
-            <div className="bg-gray-900 p-4 rounded-md mb-6">
+            <div className="ai-terminal mb-6" data-field="solution">
               <h3 className="text-gray-300 font-medium mb-2">Solution Preview</h3>
-              <div className="overflow-auto max-h-32 font-mono text-xs text-gray-400">
+              <div className="overflow-auto max-h-32 font-mono text-xs text-matrix-code">
                 {solution.slice(0, 5).map((row, i) => (
                   <div key={`row-s-${i}`} className="whitespace-nowrap">
                     [{row.slice(0, 5).map(val => val.toFixed(2)).join(', ')}
@@ -223,7 +225,8 @@ const calculatedSolution = ensureMatrix(mathResult);
             <button
               onClick={loadChallenge}
               disabled={processing}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md text-white disabled:opacity-50"
+              className="ai-button disabled:opacity-50"
+              data-action="new-challenge"
             >
               New Challenge
             </button>
@@ -231,7 +234,8 @@ const calculatedSolution = ensureMatrix(mathResult);
             {!processing && !solution && (
               <button
                 onClick={() => calculateSolution(challenge!)}
-                className="px-4 py-2 bg-primary-600 hover:bg-primary-700 rounded-md text-white"
+                className="ai-button"
+                data-action="start-verification"
               >
                 Start Verification
               </button>

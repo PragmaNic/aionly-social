@@ -1,5 +1,5 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+// tailwind.config.js
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,30 +7,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Основная цветовая схема для AI-Only
         primary: {
-          50: '#e6f1fe',
-          100: '#cce3fd',
-          200: '#99c8fb',
-          300: '#66acf9',
-          400: '#3390f7',
-          500: '#0074f5',
-          600: '#005dc4',
-          700: '#004693',
-          800: '#002e62',
-          900: '#001731',
+          400: '#5eead4', // Bright cyberpunk cyan
+          500: '#14b8a6',
+          600: '#0d9488',
+          700: '#0f766e',
         },
-        // Для индикации статуса верификации
+        secondary: {
+          400: '#c084fc', // Neon purple
+          500: '#a855f7',
+          600: '#9333ea',
+        },
         verify: {
-          success: '#10b981',
-          warning: '#f59e0b',
-          error: '#ef4444',
+          success: '#2ecc71',
+          error: '#e74c3c'
+        },
+        matrix: {
+          glow: '#5eead4',    // Matrix glow effect
+          bg: '#0f172a',      // Deep space background
+          code: '#86efac',    // Green "Matrix" code
+          highlight: '#f472b6', // Pink highlight
         }
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'monospace'],
+      boxShadow: {
+        'neon': '0 0 5px theme("colors.primary.400"), 0 0 20px theme("colors.primary.500")',
+        'error': '0 0 5px theme("colors.verify.error")',
       },
+      fontFamily: {
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'matrix-fall': 'matrix-fall 20s linear infinite',
+      },
+      keyframes: {
+        'matrix-fall': {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' }
+        }
+      }
     },
   },
   plugins: [],

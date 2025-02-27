@@ -21,3 +21,126 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+/* Add these animations and utilities */
+
+/* Scanline animation - creates moving horizontal line effect */
+@keyframes scanline {
+  0% { transform: translateY(-100%); opacity: 0.1; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(100%); opacity: 0.1; }
+}
+
+/* Glitch animation - creates digital distortion effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Pulsating glow animation */
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(94, 234, 212, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(94, 234, 212, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(94, 234, 212, 0.5); }
+}
+
+/* Utility classes for animations */
+.ai-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-scanline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: linear-gradient(to bottom, 
+    rgba(94, 234, 212, 0), 
+    rgba(94, 234, 212, 0.5), 
+    rgba(94, 234, 212, 0));
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+.ai-glitch:hover {
+  animation: glitch 0.3s ease;
+}
+
+.ai-glow {
+  animation: pulse-glow 4s infinite;
+}
+
+/* High-tech AI-first layout containers */
+.ai-card {
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(94, 234, 212, 0.2);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.ai-terminal {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(94, 234, 212, 0.3);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  color: rgba(94, 234, 212, 0.9);
+}
+
+.ai-button {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(15, 23, 42, 0.8);
+  border: 1px solid #5eead4;
+  color: #5eead4;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+}
+
+.ai-button:hover {
+  background-color: rgba(94, 234, 212, 0.2);
+  box-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+}
+
+.ai-button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    rgba(94, 234, 212, 0.3),
+    rgba(94, 234, 212, 0)
+  );
+  transform: rotate(30deg);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.ai-button:hover::after {
+  opacity: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -1,32 +1,43 @@
+// src/components/web3/WalletConnect.tsx
 import React from 'react';
 import { useWeb3 } from '../../contexts/Web3Context';
+// Удалим импорт useApp, так как мы его не используем
+// import { useApp } from '../../contexts/AppContext';
 
 const WalletConnect: React.FC = () => {
   const { web3State, connectWallet, disconnectWallet } = useWeb3();
   const { account, isConnected, isConnecting, error } = web3State;
+  // Удалим строку деструктуризации useApp
+  // const { sessionInfo } = useApp();
 
-  // Форматирование адреса кошелька
+  // Format wallet address for display
   const formatAddress = (address: string): string => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
+  // Handle Web3 disconnect with session integration
+  const handleDisconnect = () => {
+    disconnectWallet();
+  };
+
   return (
-    <div className="flex items-center">
+    <div className="flex items-center" data-component="wallet-connect">
       {error && (
-        <div className="text-red-500 mr-4 text-sm">{error}</div>
+        <div className="text-red-500 mr-4 text-sm" data-field="error-message">{error}</div>
       )}
       
       {isConnected && account ? (
         <div className="flex items-center space-x-3">
           <div className="hidden md:block">
             <span className="text-sm text-gray-400 mr-2">Connected:</span>
-            <span className="font-mono text-sm text-white py-1 px-2 bg-gray-800 rounded-md">
+            <span className="font-mono text-sm text-white py-1 px-2 bg-gray-800 rounded-md" data-field="wallet-address">
               {formatAddress(account)}
             </span>
           </div>
           <button
-            onClick={disconnectWallet}
+            onClick={handleDisconnect}
             className="text-sm bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-md transition-colors"
+            data-action="disconnect"
           >
             Disconnect
           </button>
@@ -36,6 +47,7 @@ const WalletConnect: React.FC = () => {
           onClick={connectWallet}
           disabled={isConnecting}
           className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-70"
+          data-action="connect"
         >
           {isConnecting ? (
             <>

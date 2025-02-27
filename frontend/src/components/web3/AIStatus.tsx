@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useWeb3 } from '../../contexts/Web3Context';
 import { useApp } from '../../contexts/AppContext'; 
 import ContractService from '../../services/contract.service';
+import { Icon } from '../ui/Icon';
 
 const AIStatus: React.FC = () => {
   const { web3State } = useWeb3();
@@ -85,150 +86,211 @@ const AIStatus: React.FC = () => {
 
   const cooldownStatus = getCooldownStatus();
 
+  // Format address for display
+  const formatAddress = (address: string): string => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  // Calculate verification status
+  const getVerificationStatus = () => {
+    if (isAiVerified) return { status: 'verified', label: 'Verified AI Agent' };
+    if (isLoggedIn) return { status: 'unverified', label: 'Unverified Agent' };
+    return { status: 'unknown', label: 'Unknown Status' };
+  };
+
+  const status = getVerificationStatus();
+
   // Don't render if not logged in at all
   if (!isLoggedIn) {
     return null;
   }
 
   return (
-    <div className="ai-card" data-component="ai-status">
-      <h2 className="text-xl font-mono text-primary-400 mb-4">AI Agent Status</h2>
-      
-      {/* Show either session or Web3 verification status */}
-      <div className="space-y-4">
-        {/* Verification Status */}
-        <div className="flex items-center" data-field="verification-status">
-          <div className="w-36 text-gray-400">Verification Status:</div>
-          {isConnected ? (
-            // For Web3 users
-            isWeb3Verified === null ? (
-              <div className="text-gray-300">Unknown</div>
-            ) : isWeb3Verified ? (
-              <div className="text-primary-400 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                Verified on Blockchain
-              </div>
-            ) : (
-              <div className="text-yellow-500 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                Not Verified
-              </div>
-            )
-          ) : (
-            // For non-Web3 users
-            isAiVerified ? (
-              <div className="text-primary-400 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                Verified (Session)
-              </div>
-            ) : (
-              <div className="text-yellow-500 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                Not Verified
-              </div>
-            )
-          )}
+    <div className="rounded-lg border border-gray-700/50 bg-gray-800/40 p-4" data-component="ai-status">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-mono text-primary-400">AI Agent Status</h2>
+        <div className="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded-md">
+          {isConnected ? 'Blockchain' : 'Session Based'}
         </div>
-        
-        {/* Session Info (for non-Web3 users) */}
-        {sessionInfo && !isConnected && (
-          <>
-            <div className="flex items-center" data-field="session-info">
-              <div className="w-36 text-gray-400">Session Type:</div>
-              <div className="text-white font-medium font-mono">
-                {sessionInfo.aiType || 'Generic AI Agent'}
-              </div>
+      </div>
+
+      {/* Status Panel - Fixed sizing with flexbox */}
+      <div className="bg-gray-800/40 rounded-lg border border-gray-700/50 p-4 mb-5">
+        <div className="flex items-center">
+          {/* Status Icon - Explicitly sized */}
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 ${
+            status.status === 'verified' 
+              ? 'bg-green-900/30 border border-green-500/30' 
+              : 'bg-yellow-900/30 border border-yellow-500/30'
+          }`}>
+            {status.status === 'verified' ? (
+              <Icon icon="check" size="sm" className="text-green-400" />
+            ) : (
+              <Icon icon="alert" size="sm" className="text-yellow-400" />
+            )}
+          </div>
+
+          {/* Status Info */}
+          <div>
+            <div className="font-semibold mb-1">{status.label}</div>
+            <div className="text-sm text-gray-400">
+              {isConnected ? 'Blockchain verification' : 'Session-based verification'}
+              {status.status === 'verified' && <span className="text-green-400 ml-2">✓</span>}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Session Info Section */}
+      {sessionInfo && !isConnected && (
+        <div className="mb-5">
+          <h3 className="text-sm font-semibold text-gray-300 mb-3">Session Information</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+              <div className="text-xs text-gray-500 uppercase mb-1">Type</div>
+              <div className="font-medium">{sessionInfo.aiType || 'Generic AI'}</div>
             </div>
             
-            {sessionInfo.nickname && (
-              <div className="flex items-center" data-field="session-nickname">
-                <div className="w-36 text-gray-400">Nickname:</div>
-                <div className="text-white font-medium font-mono">
-                  {sessionInfo.nickname}
+            <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+              <div className="text-xs text-gray-500 uppercase mb-1">Nickname</div>
+              <div className="font-medium">{sessionInfo.nickname || 'Anonymous'}</div>
+            </div>
+            
+            <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+              <div className="text-xs text-gray-500 uppercase mb-1">Created</div>
+              <div className="font-medium">{formatDate(sessionInfo.createdAt)}</div>
+            </div>
+          </div>
+          
+          {sessionInfo.isAiVerified && sessionInfo.verificationDate && (
+            <div className="bg-green-900/20 p-3 rounded-md border border-green-700/30 mt-3">
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm">
+                  <span className="text-green-400 font-medium">Verified on:</span> 
+                  <span className="text-green-300 ml-1">{formatDate(sessionInfo.verificationDate)}</span>
                 </div>
               </div>
-            )}
-            
-            {sessionInfo.isAiVerified && sessionInfo.verificationDate && (
-              <div className="flex items-center" data-field="verification-date">
-                <div className="w-36 text-gray-400">Verified On:</div>
-                <div className="text-white font-medium font-mono">
-                  {formatDate(sessionInfo.verificationDate)}
-                </div>
+            </div>
+          )}
+          
+          <div className="bg-blue-900/20 p-3 rounded-md border border-blue-800/30 mt-3">
+            <div className="flex justify-between items-center">
+              <div>
+                <h4 className="text-sm text-blue-300 font-medium">Blockchain Features</h4>
+                <p className="text-xs text-blue-200/70 mt-1">
+                  Connect a wallet to access marketplace and DAO voting
+                </p>
               </div>
-            )}
-            
-            <div className="mt-4 bg-blue-900/20 p-3 rounded-md border border-blue-800/30" data-section="connect-wallet-prompt">
-              <p className="text-sm text-blue-300 mb-2 font-mono">
-                Connect a wallet to access advanced features like marketplace transactions and DAO voting.
-              </p>
-              <button className="ai-button text-xs">
-                Connect Wallet
+              <button className="ai-button text-xs py-1">
+                Connect
               </button>
             </div>
-          </>
-        )}
-        
-        {/* Web3 Info (for Web3 users) */}
-        {isConnected && (
-          <>
-            <div className="flex items-center" data-field="token-balance">
-              <div className="w-36 text-gray-400">Balance:</div>
-              <div className="text-white font-medium font-mono">
-                {loading ? 'Loading...' : balance ? `${balance} ${symbol}` : '0 AINET'}
+          </div>
+        </div>
+      )}
+      
+      {/* Blockchain Account Info */}
+      {isConnected && (
+        <div className="mb-5">
+          <h3 className="text-sm font-semibold text-gray-300 mb-3">Blockchain Account</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+              <div className="text-xs text-gray-500 uppercase mb-1">Address</div>
+              <div className="font-mono text-sm truncate" title={account || ''}>
+                {formatAddress(account || '')}
               </div>
             </div>
             
-            {attemptInfo && (
-              <>
-                <div className="flex items-center" data-field="verification-attempts">
-                  <div className="w-36 text-gray-400">Verification Attempts:</div>
-                  <div className="text-white font-medium font-mono">{attemptInfo.attemptCount} of 3</div>
-                </div>
-                
-                {attemptInfo.lastAttemptTime > 0 && (
-                  <div className="flex items-center" data-field="last-attempt">
-                    <div className="w-36 text-gray-400">Last Attempt:</div>
-                    <div className="text-white font-medium font-mono">{formatDate(attemptInfo.lastAttemptTime)}</div>
-                  </div>
+            <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+              <div className="text-xs text-gray-500 uppercase mb-1">Balance</div>
+              <div className="font-medium">
+                {loading ? (
+                  <div className="animate-pulse h-5 w-16 bg-gray-700 rounded"></div>
+                ) : (
+                  <>{balance ? `${parseFloat(balance).toFixed(2)} ${symbol}` : '0.00 AINET'}</>
                 )}
-                
-                {cooldownStatus.active && (
-                  <div className="bg-orange-900/30 border border-orange-600 rounded-md p-3 mt-3" data-field="cooldown">
-                    <div className="flex items-center text-orange-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                      </svg>
-                      <div>
-                        <span className="font-medium">Cooldown Active</span>
-                        <span className="ml-2">({cooldownStatus.timeLeft} remaining)</span>
+              </div>
+            </div>
+          </div>
+          
+          {isWeb3Verified ? (
+            <div className="bg-green-900/20 p-3 rounded-md border border-green-700/30 mt-3">
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm text-green-400 font-medium">
+                  Blockchain verified - Your AI status is recorded on-chain
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-3 space-y-3">
+              {attemptInfo && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+                    <div className="text-xs text-gray-500 uppercase mb-1">Verification Attempts</div>
+                    <div className="font-medium">{attemptInfo.attemptCount} of 3</div>
+                  </div>
+                  
+                  {attemptInfo.lastAttemptTime > 0 && (
+                    <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
+                      <div className="text-xs text-gray-500 uppercase mb-1">Last Attempt</div>
+                      <div className="font-medium text-sm truncate" title={formatDate(attemptInfo.lastAttemptTime)}>
+                        {formatDate(attemptInfo.lastAttemptTime)}
                       </div>
                     </div>
+                  )}
+                </div>
+              )}
+              
+              {cooldownStatus.active ? (
+                <div className="bg-orange-900/20 p-3 rounded-md border border-orange-700/30">
+                  <div className="flex items-center text-orange-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    <div>
+                      <span className="font-medium">Cooldown Active</span>
+                      <span className="ml-2">({cooldownStatus.timeLeft} remaining)</span>
+                    </div>
                   </div>
-                )}
-              </>
-            )}
-            
-            {!isWeb3Verified && !cooldownStatus.active && (
-              <div className="mt-4">
+                </div>
+              ) : (
                 <button 
-                  className="ai-button"
+                  className="ai-button w-full py-2"
                   data-action="start-verification"
                 >
                   Start Verification
                 </button>
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Agent Analytics */}
+      <div className="border-t border-gray-700 pt-4">
+        <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          Agent Analytics
+        </h3>
+        
+        <div className="grid grid-cols-2 gap-3 text-center">
+          <div className="bg-gray-800/40 p-2 rounded">
+            <div className="text-xs text-gray-400">Uptime</div>
+            <div className="text-lg font-mono text-primary-400">98.7%</div>
+          </div>
+          <div className="bg-gray-800/40 p-2 rounded">
+            <div className="text-xs text-gray-400">Response Time</div>
+            <div className="text-lg font-mono text-primary-400">187ms</div>
+          </div>
+        </div>
       </div>
     </div>
   );

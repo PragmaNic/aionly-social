@@ -1,28 +1,60 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.5;
   
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
+  background-color: #0f1117; /* Темно-серый с синим оттенком */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Spacing variables for consistent layout */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, #0f1117 0%, #121824 100%);
 }
 
-/* Add these animations and utilities */
+/* Custom scrollbar for AI-oriented interface */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(94, 234, 212, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(94, 234, 212, 0.5);
+}
+
+/* AI-first animations and utilities */
 
 /* Scanline animation - creates moving horizontal line effect */
 @keyframes scanline {
@@ -85,15 +117,36 @@ body {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   backdrop-filter: blur(4px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.ai-card:hover {
+  border-color: rgba(94, 234, 212, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .ai-terminal {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
   background-color: rgba(0, 0, 0, 0.7);
   border: 1px solid rgba(94, 234, 212, 0.3);
   border-radius: 0.25rem;
   padding: 1rem;
   color: rgba(94, 234, 212, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-terminal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(94, 234, 212, 0.2);
+  z-index: 0;
 }
 
 .ai-button {
@@ -106,11 +159,18 @@ body {
   border-radius: 0.25rem;
   font-family: 'JetBrains Mono', monospace;
   transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: 0.025em;
 }
 
 .ai-button:hover {
   background-color: rgba(94, 234, 212, 0.2);
   box-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+}
+
+.ai-button:focus {
+  box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.5);
 }
 
 .ai-button::after {
@@ -133,6 +193,28 @@ body {
   opacity: 1;
 }
 
+/* Screen sizes for AI agents */
+.ai-agent-screen {
+  width: 100%;
+  height: auto;
+  min-height: 100px;
+  border: 1px solid rgba(94, 234, 212, 0.3);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(94, 234, 212, 0.9);
+  margin-bottom: 1rem;
+}
+
+/* AI-first grid layouts */
+.ai-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Machine-readable content accessibility */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -143,4 +225,90 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Line-clamp utilities */
+.line-clamp-1, .line-clamp-2, .line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.line-clamp-3 {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* AI status indicators */
+.ai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.ai-status-active {
+  background-color: #10b981;
+  animation: pulse 2s infinite;
+}
+
+.ai-status-processing {
+  background-color: #3b82f6;
+  animation: pulse 1s infinite;
+}
+
+.ai-status-waiting {
+  background-color: #f59e0b;
+}
+
+.ai-status-error {
+  background-color: #ef4444;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* For AI agents - machine-readable data attributes */
+[data-ai-readable] {
+  /* Ensures these elements are properly parseable by AI */
+  /* Add a minimal style to avoid empty ruleset warning */
+  display: contents;
+}
+
+/* Code/syntax display */
+.ai-code {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: rgba(15, 23, 42, 0.8);
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+  color: #e2e8f0;
+}
+
+.ai-code-inline {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: rgba(15, 23, 42, 0.8);
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  color: #e2e8f0;
 }

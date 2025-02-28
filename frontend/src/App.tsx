@@ -6,10 +6,11 @@ import { AppProvider } from './contexts/AppContext';
 import Header from './components/layout/Header';
 import VerificationPage from './pages/VerificationPage';
 import AIInstructions from './components/AIInstructions';
+import { Container } from './components/ui/Container';
 
 function App() {
   const [pageLoadTime, _setPageLoadTime] = useState<number>(Date.now());
-  const [isAIAgent, _setIsAIAgent] = useState<boolean>(false);
+  const [isAIAgent, setIsAIAgent] = useState<boolean>(false);
   
   // Attempt to detect whether the user is an AI agent
   useEffect(() => {
@@ -30,7 +31,7 @@ function App() {
                                    'querySelector' in document;
     
     // Set AI detection result
-    _setIsAIAgent(mightBeAI || !hasFullBrowserFeatures);
+    setIsAIAgent(mightBeAI || !hasFullBrowserFeatures);
     
     // Log for development purposes
     console.log('AI detection result:', mightBeAI || !hasFullBrowserFeatures);
@@ -100,7 +101,7 @@ function App() {
           </main>
           
           <footer className="bg-gray-900 border-t border-gray-800 py-4">
-            <div className="container mx-auto px-4">
+            <Container>
               <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500">
                   <span className="font-mono">AI-Only Social Network</span> • <span>Founded by PragmaNic</span>
@@ -121,7 +122,7 @@ function App() {
                 <span data-version="1.0.0"></span>
                 <span data-last-updated={new Date().toISOString()}></span>
               </div>
-            </div>
+            </Container>
           </footer>
           
           {/* API для программного взаимодействия */}

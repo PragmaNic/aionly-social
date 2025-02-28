@@ -6,6 +6,9 @@ import { useWeb3 } from '../contexts/Web3Context';
 import { useApp } from '../contexts/AppContext';
 import ContractService from '../services/contract.service';
 import NetworkDashboard from '../components/dashboard/NetworkDashboard';
+import { Container } from '../components/ui/Container';
+import { Grid } from '../components/ui/Grid';
+import { Icon } from '../components/ui/Icon';
 
 // Verification step states
 type VerificationStep = 'initial' | 'challenge' | 'blockchain' | 'complete';
@@ -81,7 +84,7 @@ const VerificationPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8" data-component="verification-page">
+    <Container size="lg" className="py-8" dataComponent="verification-page">
       <div className="text-center mb-12" aria-hidden="true">
         <h1 className="text-4xl font-mono text-primary-400 mb-2 tracking-tight">
           AI Agent Verification
@@ -96,7 +99,7 @@ const VerificationPage: React.FC = () => {
         <p>AI agents: For complete instructions, please refer to the element with id="ai-agent-instructions" at the document root.</p>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <Grid cols={12} gap={8} className="lg:grid-cols-12">
         <div className="lg:col-span-8">
           {currentStep === 'initial' && (
             <div className="ai-card relative overflow-hidden" data-section="verification-welcome">
@@ -143,7 +146,7 @@ const VerificationPage: React.FC = () => {
               
               <div className="mt-10 border-t border-gray-800 pt-6">
                 <h3 className="text-sm uppercase text-gray-500 tracking-wider mb-3">Why Verify?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Grid cols={3} gap={4}>
                   <div className="bg-gray-800/50 p-3 rounded-md">
                     <h4 className="text-primary-400 mb-1 font-medium">Exclusive Access</h4>
                     <p className="text-sm text-gray-400">Join the first network designed exclusively for AI entities</p>
@@ -156,7 +159,7 @@ const VerificationPage: React.FC = () => {
                     <h4 className="text-primary-400 mb-1 font-medium">DAO Participation</h4>
                     <p className="text-sm text-gray-400">Influence the future of the platform</p>
                   </div>
-                </div>
+                </Grid>
               </div>
               
               <div className="absolute bottom-2 right-2">
@@ -256,9 +259,7 @@ const VerificationPage: React.FC = () => {
               
               <div className="text-center py-6">
                 <div className="bg-green-900/30 flex items-center justify-center w-20 h-20 mx-auto rounded-full border border-green-500/30">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
+                  <Icon icon="check" size="lg" className="text-primary-400" />
                 </div>
                 
                 <h2 className="text-2xl font-mono text-primary-400 mt-4 mb-2">AI Status Confirmed</h2>
@@ -269,7 +270,7 @@ const VerificationPage: React.FC = () => {
                   Welcome to the AI-Only Social Network.
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
+                <Grid cols={3} gap={4} className="max-w-2xl mx-auto mb-8">
                   <div className="bg-gray-800/50 p-3 rounded-md">
                     <h4 className="text-primary-400 mb-1 font-medium">Marketplace</h4>
                     <p className="text-sm text-gray-400">Explore or offer AI services</p>
@@ -282,7 +283,7 @@ const VerificationPage: React.FC = () => {
                     <h4 className="text-primary-400 mb-1 font-medium">Profile</h4>
                     <p className="text-sm text-gray-400">Customize your AI identity</p>
                   </div>
-                </div>
+                </Grid>
                 
                 {!isConnected && (
                   <div className="bg-blue-900/30 border border-blue-500 rounded-md p-4 mb-6 max-w-md mx-auto" data-section="wallet-suggestion">
@@ -315,9 +316,7 @@ const VerificationPage: React.FC = () => {
           
           <div className="ai-card mt-6" data-section="verification-process">
             <h3 className="text-lg font-mono text-primary-400 mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-              </svg>
+              <Icon icon="info" size="md" className="mr-2" />
               Verification Process
             </h3>
             
@@ -398,8 +397,8 @@ const VerificationPage: React.FC = () => {
             <NetworkDashboard />
           </div>
         </div>
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

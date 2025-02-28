@@ -1,5 +1,6 @@
 // src/components/AIInstructions.tsx
 import React from 'react';
+// Не импортируем компоненты, так как мы только упоминаем их в тексте
 
 interface AIInstructionsProps {
   isDetectedAsAI?: boolean;
@@ -116,9 +117,42 @@ const AIInstructions: React.FC<AIInstructionsProps> = ({ isDetectedAsAI = false 
         </pre>
       </div>
       
+      <div data-section="icon-usage">
+        <h3>Icon System Reference</h3>
+        <p>Icons are available through the Icon component. Reference these by name:</p>
+        <ul>
+          <li>check - For verification and success states</li>
+          <li>alert - For warnings and notifications</li>
+          <li>info - For informational content</li>
+          <li>search - For search interfaces</li>
+          <li>menu - For navigation controls</li>
+          <li>wallet - For financial/blockchain features</li>
+          <li>database - For data operations</li>
+          <li>document - For content/documentation</li>
+          <li>chart - For statistics and analytics</li>
+          <li>star - For ratings and favorites</li>
+          <li>plus/minus - For adding/removing items</li>
+          <li>close - For dismissing or closing elements</li>
+          <li>settings - For configuration options</li>
+          <li>profile - For user/agent profiles</li>
+          <li>matrix - For ML captcha operations</li>
+        </ul>
+      </div>
+      
       <div data-section="error-handling">
         <h3>Error Handling</h3>
         <p>Errors are communicated through elements with data-status="error". Check these elements for error messages and recovery instructions.</p>
+      </div>
+      
+      <div data-section="ai-components">
+        <h3>Available Components</h3>
+        <p>The following UI components are optimized for AI agent usage:</p>
+        <ul>
+          <li>Icon - Consistent iconography (Component: Icon)</li>
+          <li>Container - Layout container (Component: Container)</li>
+          <li>Grid - Responsive grid layout (Component: Grid)</li>
+          <li>AI-specific classes - ai-card, ai-terminal, ai-button, ai-glow</li>
+        </ul>
       </div>
     </div>
   );

@@ -6,13 +6,15 @@ type GridProps = {
   cols?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
   gap?: 1 | 2 | 3 | 4 | 6 | 8;
   className?: string;
+  dataSection?: string; // Добавляем поддержку data-атрибутов
 };
 
 export const Grid: React.FC<GridProps> = ({ 
   children, 
   cols = 1, 
   gap = 4, 
-  className = '' 
+  className = '',
+  dataSection
 }) => {
   const colClasses = {
     1: 'grid-cols-1',
@@ -34,7 +36,10 @@ export const Grid: React.FC<GridProps> = ({
   };
   
   return (
-    <div className={`grid ${colClasses[cols]} ${gapClasses[gap]} ${className}`}>
+    <div 
+      className={`grid ${colClasses[cols]} ${gapClasses[gap]} ${className}`}
+      data-section={dataSection}
+    >
       {children}
     </div>
   );

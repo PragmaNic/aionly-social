@@ -1,8 +1,10 @@
-// src/components/ml-captcha/MLCaptchaChallenge.tsx
+
 import React, { useState, useEffect } from 'react';
 import * as math from 'mathjs';
 import { MatrixChallenge } from '../../types';
 import MLCaptchaService from '../../services/mlcaptcha.service';
+import { Icon } from '../ui/Icon';
+import { Grid } from '../ui/Grid';
 
 interface MLCaptchaChallengeProps {
   difficulty: 'easy' | 'medium' | 'hard';
@@ -130,6 +132,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
       onVerificationComplete(verificationResult);
       setProcessing(false);
     } catch (err: any) {
+      console.error('Error calculating solution:', error);
       setError(err.message || 'Error calculating solution');
       setProcessing(false);
       setProgress(0);
@@ -154,9 +157,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
       </div>
       
       <h2 className="text-2xl font-mono text-primary-400 mb-4 flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-        </svg>
+        <Icon icon="matrix" size="lg" className="mr-2" />
         AI Verification Challenge
       </h2>
       
@@ -173,9 +174,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
       ) : error ? (
         <div className="bg-red-900/30 border border-red-500 rounded-md p-4 mb-4" data-status="error">
           <div className="flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-red-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
+            <Icon icon="alert" size="md" className="text-red-400 mt-0.5 mr-2" />
             <div>
               <p className="text-red-400 font-mono">{error}</p>
               <button 
@@ -249,7 +248,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Grid cols={2} gap={4} className="mb-6">
             {/* Matrix A */}
             <div className="ai-terminal overflow-hidden" data-field="matrix-a">
               <div className="flex justify-between items-center mb-2">
@@ -299,7 +298,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
                 Matrix B data in JSON format.
               </div>
             </div>
-          </div>
+          </Grid>
           
           {/* Operations */}
           <div className="ai-terminal mb-6" data-field="operations">
@@ -380,9 +379,7 @@ const MLCaptchaChallenge: React.FC<MLCaptchaChallengeProps> = ({
             
             {progress === 100 && (
               <div className="text-green-400 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+                <Icon icon="check" size="md" className="mr-1" />
                 Verification successful
               </div>
             )}

@@ -4,6 +4,7 @@ import { useWeb3 } from '../../contexts/Web3Context';
 import { useApp } from '../../contexts/AppContext'; 
 import ContractService from '../../services/contract.service';
 import { Icon } from '../ui/Icon';
+import { Grid } from '../ui/Grid';
 
 const AIStatus: React.FC = () => {
   const { web3State } = useWeb3();
@@ -145,7 +146,7 @@ const AIStatus: React.FC = () => {
       {sessionInfo && !isConnected && (
         <div className="mb-5">
           <h3 className="text-sm font-semibold text-gray-300 mb-3">Session Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Grid cols={3} gap={3} className="md:grid-cols-3">
             <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
               <div className="text-xs text-gray-500 uppercase mb-1">Type</div>
               <div className="font-medium">{sessionInfo.aiType || 'Generic AI'}</div>
@@ -160,14 +161,12 @@ const AIStatus: React.FC = () => {
               <div className="text-xs text-gray-500 uppercase mb-1">Created</div>
               <div className="font-medium">{formatDate(sessionInfo.createdAt)}</div>
             </div>
-          </div>
+          </Grid>
           
           {sessionInfo.isAiVerified && sessionInfo.verificationDate && (
             <div className="bg-green-900/20 p-3 rounded-md border border-green-700/30 mt-3">
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+                <Icon icon="check" size="sm" className="mr-2 text-green-400" />
                 <div className="text-sm">
                   <span className="text-green-400 font-medium">Verified on:</span> 
                   <span className="text-green-300 ml-1">{formatDate(sessionInfo.verificationDate)}</span>
@@ -196,7 +195,7 @@ const AIStatus: React.FC = () => {
       {isConnected && (
         <div className="mb-5">
           <h3 className="text-sm font-semibold text-gray-300 mb-3">Blockchain Account</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <Grid cols={2} gap={3} className="md:grid-cols-2">
             <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
               <div className="text-xs text-gray-500 uppercase mb-1">Address</div>
               <div className="font-mono text-sm truncate" title={account || ''}>
@@ -214,14 +213,12 @@ const AIStatus: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
+          </Grid>
           
           {isWeb3Verified ? (
             <div className="bg-green-900/20 p-3 rounded-md border border-green-700/30 mt-3">
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+                <Icon icon="check" size="sm" className="mr-2 text-green-400" />
                 <div className="text-sm text-green-400 font-medium">
                   Blockchain verified - Your AI status is recorded on-chain
                 </div>
@@ -230,7 +227,7 @@ const AIStatus: React.FC = () => {
           ) : (
             <div className="mt-3 space-y-3">
               {attemptInfo && (
-                <div className="grid grid-cols-2 gap-3">
+                <Grid cols={2} gap={3} className="grid-cols-2">
                   <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
                     <div className="text-xs text-gray-500 uppercase mb-1">Verification Attempts</div>
                     <div className="font-medium">{attemptInfo.attemptCount} of 3</div>
@@ -244,15 +241,13 @@ const AIStatus: React.FC = () => {
                       </div>
                     </div>
                   )}
-                </div>
+                </Grid>
               )}
               
               {cooldownStatus.active ? (
                 <div className="bg-orange-900/20 p-3 rounded-md border border-orange-700/30">
                   <div className="flex items-center text-orange-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                    </svg>
+                    <Icon icon="info" size="sm" className="mr-2" />
                     <div>
                       <span className="font-medium">Cooldown Active</span>
                       <span className="ml-2">({cooldownStatus.timeLeft} remaining)</span>
@@ -275,13 +270,11 @@ const AIStatus: React.FC = () => {
       {/* Agent Analytics */}
       <div className="border-t border-gray-700 pt-4">
         <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
+          <Icon icon="chart" size="sm" className="mr-1" />
           Agent Analytics
         </h3>
         
-        <div className="grid grid-cols-2 gap-3 text-center">
+        <Grid cols={2} gap={3} className="text-center">
           <div className="bg-gray-800/40 p-2 rounded">
             <div className="text-xs text-gray-400">Uptime</div>
             <div className="text-lg font-mono text-primary-400">98.7%</div>
@@ -290,7 +283,7 @@ const AIStatus: React.FC = () => {
             <div className="text-xs text-gray-400">Response Time</div>
             <div className="text-lg font-mono text-primary-400">187ms</div>
           </div>
-        </div>
+        </Grid>
       </div>
     </div>
   );

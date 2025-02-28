@@ -1,5 +1,7 @@
 // src/components/dashboard/NetworkDashboard.tsx
 import React, { useState, useEffect } from 'react';
+import { Icon } from '../ui/Icon';
+import { Grid } from '../ui/Grid';
 
 // Mock data for demonstration
 const mockNetworkStats = {
@@ -70,6 +72,26 @@ const NetworkDashboard: React.FC = () => {
     return date.toISOString();
   };
 
+  // Функция для получения иконки и цвета по типу активности
+  const getActivityIconInfo = (action: string): { icon: string; color: string } => {
+    switch(action) {
+      case 'Verification':
+        return { icon: 'check', color: 'bg-green-500 text-green-400' };
+      case 'Marketplace Listing':
+        return { icon: 'database', color: 'bg-purple-500 text-purple-400' };
+      case 'Transaction':
+        return { icon: 'wallet', color: 'bg-blue-500 text-blue-400' };
+      case 'DAO Proposal':
+        return { icon: 'document', color: 'bg-yellow-500 text-yellow-400' };
+      case 'AI Message':
+        return { icon: 'info', color: 'bg-teal-500 text-teal-400' };
+      case 'New Agent':
+        return { icon: 'profile', color: 'bg-indigo-500 text-indigo-400' };
+      default:
+        return { icon: 'info', color: 'bg-gray-500 text-gray-400' };
+    }
+  };
+
   return (
     <div className="ai-card relative overflow-hidden" data-component="network-dashboard">
       {/* Status indicator */}
@@ -79,9 +101,7 @@ const NetworkDashboard: React.FC = () => {
       
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-mono text-primary-400 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-          </svg>
+          <Icon icon="code" size="md" className="mr-2" />
           Network Activity
         </h2>
         <div className="text-xs text-gray-400 font-mono" data-field="dashboard-time" data-time={formatISOTime(currentTime)}>
@@ -100,15 +120,13 @@ const NetworkDashboard: React.FC = () => {
       </div>
       
       {/* Key metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <Grid cols={4} gap={3} className="mb-6">
         <div className="bg-gray-800/80 rounded-md p-3 border border-gray-700 flex flex-col justify-between" data-metric="active-agents">
           <div className="text-xs text-gray-400 mb-1">Active Agents</div>
           <div className="flex items-end justify-between">
             <div className="text-xl font-medium text-blue-400">{activeAgents}</div>
             <div className="text-xs text-green-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-              </svg>
+              <Icon icon="chart" size="xs" className="mr-1" />
               <span>+3%</span>
             </div>
           </div>
@@ -119,9 +137,7 @@ const NetworkDashboard: React.FC = () => {
           <div className="flex items-end justify-between">
             <div className="text-xl font-medium text-green-400">{mockNetworkStats.verifiedAgents}</div>
             <div className="text-xs text-green-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-              </svg>
+              <Icon icon="chart" size="xs" className="mr-1" />
               <span>+5%</span>
             </div>
           </div>
@@ -132,9 +148,7 @@ const NetworkDashboard: React.FC = () => {
           <div className="flex items-end justify-between">
             <div className="text-xl font-medium text-purple-400">{mockNetworkStats.totalTransactions}</div>
             <div className="text-xs text-green-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-              </svg>
+              <Icon icon="chart" size="xs" className="mr-1" />
               <span>+12%</span>
             </div>
           </div>
@@ -145,14 +159,12 @@ const NetworkDashboard: React.FC = () => {
           <div className="flex items-end justify-between">
             <div className="text-xl font-medium text-yellow-400">{mockNetworkStats.dailyTransactions}</div>
             <div className="text-xs text-green-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-              </svg>
+              <Icon icon="chart" size="xs" className="mr-1" />
               <span>+8%</span>
             </div>
           </div>
         </div>
-      </div>
+      </Grid>
       
       {/* Agent types visualization */}
       <div className="mb-6" data-section="agent-types">
@@ -206,30 +218,30 @@ const NetworkDashboard: React.FC = () => {
         </div>
         
         <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-          {activityFeed.map(activity => (
-            <div 
-              key={activity.id} 
-              className="flex items-center justify-between bg-gray-800/50 p-2 rounded-md border border-gray-700/50 transition-all hover:border-primary-500/30" 
-              data-activity-id={activity.id}
-              data-activity-timestamp={activity.timestamp}
-            >
-              <div className="flex items-center">
-                <div className={`w-2 h-2 rounded-full mr-2 ${
-                  activity.action === 'Verification' ? 'bg-green-500' :
-                  activity.action === 'Transaction' ? 'bg-blue-500' :
-                  activity.action === 'Marketplace Listing' ? 'bg-purple-500' :
-                  activity.action === 'DAO Proposal' ? 'bg-yellow-500' :
-                  'bg-gray-500'
-                }`}></div>
-                <span className="text-gray-300 text-sm">{activity.action}</span>
-                <span className="text-gray-500 text-xs ml-2">by</span>
-                <span className="text-blue-400 text-xs ml-1 font-mono">{activity.agent}</span>
+          {activityFeed.map(activity => {
+            const { icon, color } = getActivityIconInfo(activity.action);
+            const colorClasses = color.split(' ');
+            return (
+              <div 
+                key={activity.id} 
+                className="flex items-center justify-between bg-gray-800/50 p-2 rounded-md border border-gray-700/50 transition-all hover:border-primary-500/30" 
+                data-activity-id={activity.id}
+                data-activity-timestamp={activity.timestamp}
+              >
+                <div className="flex items-center">
+                  <div className="flex items-center justify-center mr-2">
+                    <Icon icon={icon as any} size="xs" className={colorClasses[1]} />
+                  </div>
+                  <span className="text-gray-300 text-sm">{activity.action}</span>
+                  <span className="text-gray-500 text-xs ml-2">by</span>
+                  <span className="text-blue-400 text-xs ml-1 font-mono">{activity.agent}</span>
+                </div>
+                <span className="text-gray-500 text-xs" title={new Date(activity.timestamp).toLocaleString()}>
+                  {formatTimeSince(activity.timestamp)}
+                </span>
               </div>
-              <span className="text-gray-500 text-xs" title={new Date(activity.timestamp).toLocaleString()}>
-                {formatTimeSince(activity.timestamp)}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       

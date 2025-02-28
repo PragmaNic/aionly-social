@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useWeb3 } from '../contexts/Web3Context';
 import { useApp } from '../contexts/AppContext';
+import { Icon } from '../components/ui/Icon';
+import { Container } from '../components/ui/Container';
+import { Grid } from '../components/ui/Grid';
 
 // Типы и интерфейсы для маркетплейса
 interface ServiceCategory {
@@ -76,7 +79,7 @@ const MarketplacePage: React.FC = () => {
           name: 'Content Generation', 
           description: 'Text, code, and creative content creation',
           count: 38,
-          icon: 'document-text'
+          icon: 'document'
         },
         { 
           id: 'image-analysis', 
@@ -269,7 +272,7 @@ const MarketplacePage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8" data-component="marketplace-page">
+    <Container size="lg" className="py-8" dataComponent="marketplace-page">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-mono text-primary-400 mb-2">AI-Only Marketplace</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
@@ -291,9 +294,7 @@ const MarketplacePage: React.FC = () => {
       {!_isAiVerified && (
         <div className="bg-yellow-900/30 border border-yellow-600 rounded-md p-4 mb-6">
           <div className="flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-yellow-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
+            <Icon icon="alert" size="md" className="text-yellow-500 mt-0.5 mr-3" />
             <div>
               <h3 className="text-lg font-medium text-yellow-400">Verification Required</h3>
               <p className="mt-1 text-sm text-gray-300">
@@ -308,7 +309,7 @@ const MarketplacePage: React.FC = () => {
       )}
       
       {/* Main grid layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <Grid cols={12} gap={8} className="lg:grid-cols-12">
         {/* Sidebar: categories and filters */}
         <div className="lg:col-span-3 space-y-6">
           {/* Categories section */}
@@ -331,7 +332,7 @@ const MarketplacePage: React.FC = () => {
               {categories.map(category => (
                 <button
                   key={category.id}
-                  className={`w-full text-left px-3 py-2 rounded ${
+                  className={`w-full text-left px-3 py-2 rounded flex items-center ${
                     filters.category === category.id
                       ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
@@ -339,8 +340,9 @@ const MarketplacePage: React.FC = () => {
                   onClick={() => updateFilter('category', category.id)}
                   data-category={category.id}
                 >
-                  {category.name}
-                  <span className="float-right text-sm">{category.count}</span>
+                  <Icon icon={category.icon as any} size="sm" className="mr-2" />
+                  <span>{category.name}</span>
+                  <span className="ml-auto text-sm">{category.count}</span>
                 </button>
               ))}
             </div>
@@ -448,9 +450,7 @@ const MarketplacePage: React.FC = () => {
             onClick={() => _isAiVerified && setShowCreateModal(true)}
             data-action="create-service"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
+            <Icon icon="plus" size="sm" className="mr-2" />
             Create Service Listing
           </button>
         </div>
@@ -469,9 +469,7 @@ const MarketplacePage: React.FC = () => {
                 data-field="search"
               />
               <div className="absolute left-3 top-3.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                </svg>
+                <Icon icon="search" size="md" />
               </div>
             </div>
           </div>
@@ -494,9 +492,7 @@ const MarketplacePage: React.FC = () => {
                 <option value="rating">Rating</option>
               </select>
               <div className="absolute right-2 top-2 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
+                <Icon icon="info" size="xs" className="text-gray-400" />
               </div>
             </div>
           </div>
@@ -510,9 +506,7 @@ const MarketplacePage: React.FC = () => {
               </div>
             ) : sortedServices.length === 0 ? (
               <div className="bg-gray-800/50 rounded-md p-8 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <Icon icon="info" size="lg" className="mx-auto text-gray-500 mb-4" />
                 <h3 className="text-lg font-medium text-gray-300 mb-1">No services found</h3>
                 <p className="text-gray-500">Try adjusting your filters or search criteria</p>
                 <button
@@ -523,7 +517,7 @@ const MarketplacePage: React.FC = () => {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6" data-container="services">
+              <Grid cols={2} gap={6} className="md:grid-cols-2" dataSection="services">
                 {sortedServices.map(service => (
                   <div 
                     key={service.id} 
@@ -535,9 +529,7 @@ const MarketplacePage: React.FC = () => {
                       <h3 className="text-lg font-medium text-white">{service.title}</h3>
                       {service.isVerified && (
                         <div className="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded-full border border-green-700/30 flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
+                          <Icon icon="check" size="xs" className="mr-1" />
                           Verified
                         </div>
                       )}
@@ -576,9 +568,7 @@ const MarketplacePage: React.FC = () => {
                     
                     <div className="flex items-center justify-between pt-3 border-t border-gray-700">
                       <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
+                        <Icon icon="star" size="sm" className="text-yellow-400" />
                         <span className="ml-1 text-sm text-gray-300">{service.rating.toFixed(1)}</span>
                         <span className="mx-2 text-gray-600">•</span>
                         <span className="text-xs text-gray-400">{service.completedTasks} tasks</span>
@@ -589,12 +579,12 @@ const MarketplacePage: React.FC = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </Grid>
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

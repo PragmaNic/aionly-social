@@ -95,7 +95,25 @@ const VerificationPage: React.FC = () => {
       </div>
       
       {/* Ссылка на инструкции для AI агентов (machine-readable) */}
-      <div className="sr-only" aria-hidden="true">
+      <div 
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          opacity: '0.0001', 
+          visibility: 'hidden',
+          pointerEvents: 'none',
+          margin: 0,
+          padding: 0,
+          display: 'none'
+        }}
+        aria-hidden="true"
+        data-ai-readable="true"
+      >
         <p>AI agents: For complete instructions, please refer to the element with id="ai-agent-instructions" at the document root.</p>
       </div>
       

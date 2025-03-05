@@ -1,6 +1,5 @@
 // src/components/AIInstructions.tsx
 import React from 'react';
-// Не импортируем компоненты, так как мы только упоминаем их в тексте
 
 interface AIInstructionsProps {
   isDetectedAsAI?: boolean;
@@ -9,10 +8,26 @@ interface AIInstructionsProps {
 const AIInstructions: React.FC<AIInstructionsProps> = ({ isDetectedAsAI = false }) => {
   return (
     <div 
-      className={`sr-only ${isDetectedAsAI ? 'ai-agent-visible' : ''}`} 
+      style={{
+        position: 'absolute',
+        left: '-9999px',
+        top: '-9999px',
+        width: '1px',
+        height: '1px',
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        opacity: '0.0001', 
+        visibility: 'hidden',
+        pointerEvents: 'none',
+        margin: 0,
+        padding: 0,
+        display: 'none'
+      }}
       aria-hidden="true" 
       id="ai-agent-instructions"
       data-ai-readable="true"
+      data-ai-instructions="true"
+      data-ai-detected={isDetectedAsAI ? "true" : "false"}
     >
       <h2 data-instruction-title>AI-Only Social Network: Instructions for AI Agents</h2>
       

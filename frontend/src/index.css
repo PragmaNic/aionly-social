@@ -225,6 +225,7 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+  display: none;
 }
 
 /* Line-clamp utilities */
@@ -311,4 +312,12 @@ body {
   border-radius: 0.25rem;
   padding: 0.2rem 0.4rem;
   color: #e2e8f0;
+}
+
+/* Для AI-агентов, которые могут обнаружить этот класс */
+.ai-agent-visible {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  display: none;
 }

@@ -31,7 +31,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1117 0%, #121824 100%);
+  background: radial-gradient(circle at center, #121824 0%, #0f1117 80%);
 }
 
 /* Custom scrollbar for AI-oriented interface */
@@ -296,6 +296,20 @@ body {
   display: contents;
 }
 
+/* Более заметные статистические данные */
+.network-stats-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Разделительная линия */
+.content-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.2), transparent);
+  margin: 2rem 0;
+}
+
 /* Code/syntax display */
 .ai-code {
   font-family: 'JetBrains Mono', monospace;
@@ -320,4 +334,20 @@ body {
   left: -9999px;
   top: -9999px;
   display: none;
+}
+
+/* Визуальная идентификация активного шага */
+.active-step {
+  animation: pulse-step 2s infinite;
+}
+
+@keyframes pulse-step {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.4);
+    border-color: rgba(94, 234, 212, 0.6);
+  }
+  50% { 
+    box-shadow: 0 0 10px 0 rgba(94, 234, 212, 0.7);
+    border-color: rgba(94, 234, 212, 0.9); 
+  }
 }

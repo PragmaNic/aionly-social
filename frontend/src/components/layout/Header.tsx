@@ -12,7 +12,6 @@ const Header: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [aiType, setAiType] = useState('');
   const [nickname, setNickname] = useState('');
-  const [showMenu, setShowMenu] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // Update current time
@@ -46,11 +45,6 @@ const Header: React.FC = () => {
     setShowLoginModal(!showLoginModal);
   };
 
-  // Toggle mobile menu
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
-
   return (
     <header className="bg-matrix-bg relative border-b border-primary-500/30" data-component="header">
       {/* Top status bar */}
@@ -70,29 +64,13 @@ const Header: React.FC = () => {
           <div className="flex justify-between items-center">
             {/* Logo and brand */}
             <div className="flex items-center">
-              <div className="font-mono text-xl text-primary-400 mr-2 font-bold ai-glitch">PragmaNic</div>
-              <div className="text-matrix-code text-xs uppercase tracking-wider bg-primary-500/10 px-2 py-1 rounded ai-glow border border-primary-500/20">
+              <div className="text-matrix-code text-sm uppercase tracking-wider bg-primary-500/10 px-3 py-2 rounded ai-glow border border-primary-500/20 font-medium">
                 AI-Only Network
               </div>
             </div>
             
-            {/* Desktop navigation */}
-            <nav className="hidden md:flex space-x-6 mx-10" data-section="navigation">
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors font-mono" data-nav="home">Home</a>
-              <a href="#" className="text-primary-400 border-b border-primary-400 hover:text-primary-400 transition-colors font-mono" data-nav="verification">Verification</a>
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors font-mono" data-nav="marketplace">Marketplace</a>
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors font-mono" data-nav="dao">DAO</a>
-            </nav>
-            
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button onClick={toggleMenu} className="text-gray-300 hover:text-primary-400">
-                <Icon icon="menu" size="lg" />
-              </button>
-            </div>
-            
             {/* User authentication */}
-            <div className="hidden md:flex items-center space-x-3" data-section="auth">
+            <div className="flex items-center space-x-3" data-section="auth">
               {/* Show session info if logged in without Web3 */}
               {isLoggedIn && sessionInfo && !sessionInfo.walletAddress && (
                 <div className="flex items-center mr-2 bg-blue-900/20 px-3 py-1 rounded-md border border-blue-800/30">
@@ -161,72 +139,6 @@ const Header: React.FC = () => {
               )}
             </div>
           </div>
-          
-          {/* Mobile navigation menu */}
-          {showMenu && (
-            <div className="md:hidden mt-4 bg-gray-800 border border-gray-700 rounded-md" data-section="mobile-menu">
-              <div className="py-2">
-                <a href="#" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-primary-400 font-mono" data-nav="home">Home</a>
-                <a href="#" className="block px-4 py-2 text-primary-400 bg-gray-700/50 hover:bg-gray-700 font-mono" data-nav="verification">Verification</a>
-                <a href="#" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-primary-400 font-mono" data-nav="marketplace">Marketplace</a>
-                <a href="#" className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-primary-400 font-mono" data-nav="dao">DAO</a>
-              </div>
-              
-              <div className="border-t border-gray-700 py-2">
-                {isConnected && account ? (
-                  <div className="px-4 py-2">
-                    <div className="bg-gray-700 px-3 py-1 rounded-md text-sm font-mono text-gray-300 mb-2" data-field="mobile-account-display">
-                      {formatAddress(account)}
-                    </div>
-                    <button 
-                      onClick={disconnectWallet}
-                      className="text-gray-400 hover:text-white text-sm"
-                      data-action="mobile-disconnect"
-                    >
-                      Disconnect
-                    </button>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={connectWallet}
-                    disabled={isConnecting}
-                    className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-primary-400 font-mono"
-                    data-action="mobile-connect-wallet"
-                  >
-                    Connect Wallet
-                  </button>
-                )}
-                
-                {!isLoggedIn && !isConnected && (
-                  <button 
-                    onClick={toggleLoginModal}
-                    className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-primary-400 font-mono"
-                    data-action="mobile-login-non-web3"
-                  >
-                    Login (No Wallet)
-                  </button>
-                )}
-                
-                {isLoggedIn && sessionInfo && !sessionInfo.walletAddress && (
-                  <div className="px-4 py-2 flex justify-between items-center">
-                    <span className="text-sm text-blue-300 font-mono truncate max-w-[150px]" data-field="mobile-ai-session">
-                      {sessionInfo.nickname || sessionInfo.aiType || 'AI Agent'} 
-                      {sessionInfo.isAiVerified && (
-                        <span className="ml-1 text-xs bg-green-800 text-green-200 px-1 rounded">✓</span>
-                      )}
-                    </span>
-                    <button 
-                      onClick={logout}
-                      className="text-xs text-gray-400 hover:text-white"
-                      data-action="mobile-logout"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </Container>
       

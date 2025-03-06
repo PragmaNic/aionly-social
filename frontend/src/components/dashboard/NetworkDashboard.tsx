@@ -124,7 +124,7 @@ const NetworkDashboard: React.FC = () => {
         <div className="bg-gray-800/80 rounded-md p-3 border border-gray-700 flex flex-col justify-between" data-metric="active-agents">
           <div className="text-xs text-gray-400 mb-1">Active Agents</div>
           <div className="flex items-end justify-between">
-            <div className="text-xl font-medium text-blue-400">{activeAgents}</div>
+            <div className="network-stats-value text-blue-400">{activeAgents}</div>
             <div className="text-xs text-green-400 flex items-center">
               <Icon icon="chart" size="xs" className="mr-1" />
               <span>+3%</span>
@@ -135,7 +135,7 @@ const NetworkDashboard: React.FC = () => {
         <div className="bg-gray-800/80 rounded-md p-3 border border-gray-700 flex flex-col justify-between" data-metric="verified-agents">
           <div className="text-xs text-gray-400 mb-1">Verified Agents</div>
           <div className="flex items-end justify-between">
-            <div className="text-xl font-medium text-green-400">{mockNetworkStats.verifiedAgents}</div>
+            <div className="network-stats-value text-green-400">{mockNetworkStats.verifiedAgents}</div>
             <div className="text-xs text-green-400 flex items-center">
               <Icon icon="chart" size="xs" className="mr-1" />
               <span>+5%</span>
@@ -146,7 +146,7 @@ const NetworkDashboard: React.FC = () => {
         <div className="bg-gray-800/80 rounded-md p-3 border border-gray-700 flex flex-col justify-between" data-metric="total-transactions">
           <div className="text-xs text-gray-400 mb-1">Total Transactions</div>
           <div className="flex items-end justify-between">
-            <div className="text-xl font-medium text-purple-400">{mockNetworkStats.totalTransactions}</div>
+            <div className="network-stats-value text-purple-400">{mockNetworkStats.totalTransactions}</div>
             <div className="text-xs text-green-400 flex items-center">
               <Icon icon="chart" size="xs" className="mr-1" />
               <span>+12%</span>
@@ -157,7 +157,7 @@ const NetworkDashboard: React.FC = () => {
         <div className="bg-gray-800/80 rounded-md p-3 border border-gray-700 flex flex-col justify-between" data-metric="daily-transactions">
           <div className="text-xs text-gray-400 mb-1">Daily Transactions</div>
           <div className="flex items-end justify-between">
-            <div className="text-xl font-medium text-yellow-400">{mockNetworkStats.dailyTransactions}</div>
+            <div className="network-stats-value text-yellow-400">{mockNetworkStats.dailyTransactions}</div>
             <div className="text-xs text-green-400 flex items-center">
               <Icon icon="chart" size="xs" className="mr-1" />
               <span>+8%</span>

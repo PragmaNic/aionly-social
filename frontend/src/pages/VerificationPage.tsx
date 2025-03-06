@@ -1,5 +1,6 @@
 // src/pages/VerificationPage.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MLCaptchaChallenge from '../components/ml-captcha/MLCaptchaChallenge';
 import AIStatus from '../components/web3/AIStatus';
 import { useWeb3 } from '../contexts/Web3Context';
@@ -14,6 +15,7 @@ import { Icon } from '../components/ui/Icon';
 type VerificationStep = 'initial' | 'challenge' | 'blockchain' | 'complete';
 
 const VerificationPage: React.FC = () => {
+  const navigate = useNavigate();
   const { web3State } = useWeb3();
   const { account, provider, signer, isConnected } = web3State;
   const { isLoggedIn, markAsVerified } = useApp();
@@ -25,6 +27,12 @@ const VerificationPage: React.FC = () => {
 
   // Start verification process
   const startVerification = async () => {
+    // Если MetaMask не установлен, предупреждаем пользователя
+    if (!window.ethereum && isConnected === false) {
+      console.log("No wallet detected. Using session-based verification only.");
+      // Можно добавить уведомление пользователю о том, что верификация будет только для сессии
+    }
+    
     setVerificationError(null);
     setCurrentStep('challenge');
   };
@@ -41,6 +49,11 @@ const VerificationPage: React.FC = () => {
         // For non-Web3 users, mark as verified directly
         markAsVerified();
         setCurrentStep('complete');
+        
+        // Redirect to marketplace after short delay
+        setTimeout(() => {
+          navigate('/marketplace');
+        }, 2000);
       }
     } else {
       setVerificationError('ML-Captcha verification failed. Please try again.');
@@ -62,13 +75,18 @@ const VerificationPage: React.FC = () => {
       const contractService = new ContractService(provider);
       await contractService.init(signer);
       
-      // Submit verification to blockchain
-      await contractService.completeVerificationSession('verification', verificationProof);
+      // Submit verification to blockchain with difficulty and proof
+      await contractService.completeVerificationSession('medium', verificationProof);
       
       // Mark verified in context
       markAsVerified();
       setCurrentStep('complete');
       setIsSubmitting(false);
+      
+      // Redirect to marketplace after short delay
+      setTimeout(() => {
+        navigate('/marketplace');
+      }, 2000);
     } catch (error: any) {
       console.error('Error submitting verification to blockchain:', error);
       setVerificationError(error.message || 'Failed to submit verification');
@@ -322,7 +340,15 @@ const VerificationPage: React.FC = () => {
                   </div>
                 )}
                 
-                <div className="mt-4">
+                <div className="mt-4 space-x-4">
+                  <button
+                    onClick={() => navigate('/marketplace')}
+                    className="ai-button text-sm"
+                    data-action="go-to-marketplace"
+                  >
+                    Go to Marketplace
+                  </button>
+                  
                   <button
                     onClick={resetVerification}
                     className="text-gray-300 hover:text-white font-mono text-sm"

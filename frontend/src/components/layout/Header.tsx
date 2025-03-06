@@ -45,6 +45,18 @@ const Header: React.FC = () => {
     setShowLoginModal(!showLoginModal);
   };
 
+  // Handle wallet connection with metamask check
+  const handleConnectWallet = () => {
+    if (!window.ethereum) {
+      // Если MetaMask не установлен, показываем предупреждение
+      alert("MetaMask не установлен. Для подключения кошелька необходимо установить MetaMask: https://metamask.io/download/");
+      return;
+    }
+    
+    // Вызываем функцию подключения из контекста
+    connectWallet();
+  };
+
   return (
     <header className="bg-matrix-bg relative border-b border-primary-500/30" data-component="header">
       {/* Top status bar */}
@@ -106,7 +118,7 @@ const Header: React.FC = () => {
                 </div>
               ) : (
                 <button 
-                  onClick={connectWallet}
+                  onClick={handleConnectWallet}
                   disabled={isConnecting}
                   className="ai-button"
                   data-action="connect-wallet"

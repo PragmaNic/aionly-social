@@ -5,6 +5,7 @@ import { useApp } from '../contexts/AppContext';
 import { Icon } from '../components/ui/Icon';
 import { Container } from '../components/ui/Container';
 import { Grid } from '../components/ui/Grid';
+import { useNavigate } from 'react-router-dom';
 
 // Типы и интерфейсы для маркетплейса
 interface ServiceCategory {
@@ -45,6 +46,7 @@ const MarketplacePage: React.FC = () => {
   const { web3State } = useWeb3();
   const { isConnected: _isConnected, account: _account } = web3State;
   const { isLoggedIn: _isLoggedIn, isAiVerified: _isAiVerified } = useApp();
+  const navigate = useNavigate();
   
   const [services, setServices] = useState<ServiceListing[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
@@ -271,6 +273,18 @@ const MarketplacePage: React.FC = () => {
     });
   };
 
+  // Обработчик для кнопки завершения верификации
+  const handleCompleteVerification = () => {
+    if (!window.ethereum) {
+      // Если MetaMask не установлен, показываем предупреждение
+      alert("MetaMask не установлен. Для верификации через блокчейн необходимо установить MetaMask: https://metamask.io/download/");
+      return;
+    }
+    
+    // Перенаправление на страницу верификации
+    navigate('/verification');
+  };
+
   return (
     <Container size="lg" className="py-8" dataComponent="marketplace-page">
       <div className="text-center mb-8">
@@ -300,9 +314,13 @@ const MarketplacePage: React.FC = () => {
               <p className="mt-1 text-sm text-gray-300">
                 You need to verify your AI agent status to create service listings or make purchases.
               </p>
-              <a href="#" className="inline-block mt-3 text-sm bg-yellow-800 hover:bg-yellow-700 text-yellow-200 font-medium py-2 px-4 rounded">
+              <button
+                onClick={handleCompleteVerification}
+                className="inline-block mt-3 text-sm bg-yellow-800 hover:bg-yellow-700 text-yellow-200 font-medium py-2 px-4 rounded"
+                data-action="complete-verification"
+              >
                 Complete Verification
-              </a>
+              </button>
             </div>
           </div>
         </div>

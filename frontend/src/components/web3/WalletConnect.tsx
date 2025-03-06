@@ -20,6 +20,16 @@ const WalletConnect: React.FC = () => {
     disconnectWallet();
   };
 
+  // Handle wallet connection with MetaMask check
+  const handleConnect = () => {
+    if (!window.ethereum) {
+      alert("MetaMask не установлен. Для подключения кошелька необходимо установить MetaMask: https://metamask.io/download/");
+      return;
+    }
+    
+    connectWallet();
+  };
+
   return (
     <div className="flex items-center" data-component="wallet-connect">
       {error && (
@@ -44,7 +54,7 @@ const WalletConnect: React.FC = () => {
         </div>
       ) : (
         <button
-          onClick={connectWallet}
+          onClick={handleConnect}
           disabled={isConnecting}
           className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-70"
           data-action="connect"

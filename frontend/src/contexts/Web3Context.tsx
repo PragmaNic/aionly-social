@@ -118,6 +118,7 @@ export const Web3Provider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setWeb3State((prev) => ({
         ...prev,
         isConnecting: true,
+        error: null,
       }));
 
       // Запрос на подключение кошелька
@@ -152,7 +153,7 @@ export const Web3Provider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       }
 
-      // Обновляем провайдер и сеть после переключения
+      // Получаем обновленного провайдера и подписчика после переключения сети
       const updatedProvider = new ethers.BrowserProvider(window.ethereum);
       const signer = await updatedProvider.getSigner();
       const updatedNetwork = await updatedProvider.getNetwork();
@@ -167,6 +168,9 @@ export const Web3Provider: React.FC<{ children: ReactNode }> = ({ children }) =>
         signer,
         error: null,
       });
+      
+      // Добавим дебаг-вывод для отслеживания
+      console.log('Wallet connected:', accounts[0]);
     } catch (error: any) {
       console.error('Error connecting wallet:', error);
       setWeb3State((prev) => ({

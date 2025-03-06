@@ -10,9 +10,10 @@ const AINET_ABI = [
 
 // ABI для AIVerifier
 const AIVERIFIER_ABI = [
-  'function startSession(string difficulty) returns (void)',
-  'function completeSession(bytes32 challengeId, bytes proof) returns (void)',
+  'function startSession(string difficulty)',
+  'function completeSession(bytes32 challengeId, bytes proof)',
   'function getAttemptInfo(address agent) view returns (uint256 attemptCount, uint256 lastAttemptTime, uint256 cooldownEnd)',
+  'event SessionStarted(address indexed agent, bytes32 challengeId, string difficulty)'
 ];
 
 // Адреса контрактов
@@ -90,15 +91,78 @@ export class ContractService {
   }
 
   // Завершение сессии верификации
-  public async completeVerificationSession(challengeId: string, proof: string) {
+  public async completeVerificationSession(difficulty: string, proof: string) {
     if (!this.verifierContract) {
       throw new Error('Contract not initialized');
     }
-    const tx = await this.verifierContract.completeSession(
-      ethers.id(challengeId),
-      ethers.toUtf8Bytes(proof)
-    );
-    return await tx.wait();
+    
+    if (!this.signer) {
+      throw new Error('Signer not initialized');
+    }
+    
+    try {
+      const signerAddress = await this.signer.getAddress();
+      console.log('Starting verification session with difficulty:', difficulty, 'for address:', signerAddress);
+      
+      // 1. Вызываем startSession для получения challengeId
+      const startTx = await this.verifierContract.startSession(difficulty);
+      console.log('Start session transaction sent:', startTx.hash);
+      
+      // Ждем подтверждения транзакции
+      const startReceipt = await startTx.wait();
+      console.log('Start session confirmed');
+      
+      // 2. Извлекаем challengeId из события SessionStarted
+      let challengeId = null;
+      
+      // Проходим по всем событиям в чеке транзакции
+      for (const log of startReceipt.logs) {
+        try {
+          // Попытка декодировать лог как событие SessionStarted
+          const parsedLog = this.verifierContract.interface.parseLog({
+            topics: log.topics,
+            data: log.data
+          });
+          
+          // Проверяем, это ли нужное событие
+          if (parsedLog && parsedLog.name === 'SessionStarted') {
+            // Извлекаем challengeId из аргументов события
+            challengeId = parsedLog.args.challengeId;
+            console.log('Found challengeId in event:', challengeId);
+            break;
+          }
+        } catch (e) {
+          // Пропускаем логи, которые не соответствуют нашему событию
+          continue;
+        }
+      }
+      
+      if (!challengeId) {
+        throw new Error('Could not extract challengeId from transaction events');
+      }
+      
+      // 3. Вызываем completeSession с полученным challengeId
+      console.log('Completing session with challenge ID:', challengeId);
+      
+      // Преобразуем proof в bytes
+      const proofBytes = ethers.toUtf8Bytes(proof);
+      
+      const completeTx = await this.verifierContract.completeSession(
+        challengeId,
+        proofBytes
+      );
+      
+      console.log('Complete session transaction sent:', completeTx.hash);
+      
+      // Ждем подтверждения второй транзакции
+      const completeReceipt = await completeTx.wait();
+      console.log('Complete session confirmed');
+      
+      return completeReceipt;
+    } catch (error) {
+      console.error('Contract call error:', error);
+      throw error;
+    }
   }
 
   // Получение информации о попытках верификации

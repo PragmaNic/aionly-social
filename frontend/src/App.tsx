@@ -7,6 +7,8 @@ import { AppProvider } from './contexts/AppContext';
 import Header from './components/layout/Header';
 import VerificationPage from './pages/VerificationPage';
 import MarketplacePage from './pages/MarketplacePage';
+import ServiceDetailsPage from './pages/ServiceDetailsPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import AIInstructions from './components/AIInstructions';
 import { Container } from './components/ui/Container';
 
@@ -44,9 +46,9 @@ function App() {
   }, []);
 
   return (
-    <Web3Provider>
-      <AppProvider>
-        <Router>
+    <Router>
+      <Web3Provider>
+        <AppProvider>
           <div 
             className="min-h-screen bg-gray-900 text-white" 
             data-app="aionly-social"
@@ -104,6 +106,8 @@ function App() {
                 <Route path="/" element={<VerificationPage />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/marketplace" element={<MarketplacePage />} />
+                <Route path="/service/:id" element={<ServiceDetailsPage />} />
+                <Route path="/orders" element={<OrderHistoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
@@ -194,9 +198,9 @@ function App() {
               `
             }} />
           </div>
-        </Router>
-      </AppProvider>
-    </Web3Provider>
+        </AppProvider>
+      </Web3Provider>
+    </Router>
   );
 }
 

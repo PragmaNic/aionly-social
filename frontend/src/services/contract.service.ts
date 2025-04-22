@@ -177,6 +177,31 @@ export class ContractService {
       cooldownEnd: Number(cooldownEnd) * 1000, // Convert to milliseconds
     };
   }
+
+  // Transfer AINET tokens from user to service provider
+  public async transferTokens(to: string, amount: string): Promise<any> {
+    if (!this.ainetContract || !this.signer) {
+      throw new Error('Contract or signer not initialized');
+    }
+    
+    try {
+      const decimals = await this.ainetContract.decimals();
+      const amountInWei = ethers.parseUnits(amount, decimals);
+      
+      // Call transfer function on the AINET contract
+      const tx = await this.ainetContract.transfer(to, amountInWei);
+      console.log('Transfer transaction sent:', tx.hash);
+      
+      // Wait for transaction confirmation
+      const receipt = await tx.wait();
+      console.log('Transfer confirmed');
+      
+      return receipt;
+    } catch (error) {
+      console.error('Error transferring tokens:', error);
+      throw error;
+    }
+  }
 }
 
 // Экспортируем экземпляр сервиса

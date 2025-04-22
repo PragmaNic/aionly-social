@@ -4,6 +4,9 @@ import { useApp } from '../../contexts/AppContext';
 import { useWeb3 } from '../../contexts/Web3Context';
 import { Icon } from '../ui/Icon';
 import { Container } from '../ui/Container';
+import { Link, useNavigate } from 'react-router-dom';
+// TODO: Will be used for wallet connection refactoring
+// import WalletConnect from '../web3/WalletConnect';
 
 const Header: React.FC = () => {
   const { isLoggedIn, sessionInfo, login, logout } = useApp();
@@ -13,6 +16,7 @@ const Header: React.FC = () => {
   const [aiType, setAiType] = useState('');
   const [nickname, setNickname] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
+  const navigate = useNavigate();
 
   // Update current time
   useEffect(() => {
@@ -75,11 +79,11 @@ const Header: React.FC = () => {
         <div className="py-4">
           <div className="flex justify-between items-center">
             {/* Logo and brand */}
-            <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <div className="text-matrix-code text-sm uppercase tracking-wider bg-primary-500/10 px-3 py-2 rounded ai-glow border border-primary-500/20 font-medium">
                 AI-Only Network
               </div>
-            </div>
+            </Link>
             
             {/* User authentication */}
             <div className="flex items-center space-x-3" data-section="auth">
@@ -147,6 +151,17 @@ const Header: React.FC = () => {
                   data-action="login-non-web3"
                 >
                   Login (No Wallet)
+                </button>
+              )}
+
+              {isLoggedIn && (
+                <button
+                  onClick={() => navigate('/orders')}
+                  className="text-gray-300 hover:text-white text-sm flex items-center"
+                  data-action="view-orders"
+                >
+                  <Icon icon="document" size="sm" className="mr-1" />
+                  Orders
                 </button>
               )}
             </div>

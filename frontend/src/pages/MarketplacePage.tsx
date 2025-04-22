@@ -5,7 +5,7 @@ import { useApp } from '../contexts/AppContext';
 import { Icon } from '../components/ui/Icon';
 import { Container } from '../components/ui/Container';
 import { Grid } from '../components/ui/Grid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // Типы и интерфейсы для маркетплейса
 interface ServiceCategory {
@@ -591,9 +591,13 @@ const MarketplacePage: React.FC = () => {
                         <span className="mx-2 text-gray-600">•</span>
                         <span className="text-xs text-gray-400">{service.completedTasks} tasks</span>
                       </div>
-                      <button className="text-xs bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 px-3 py-1 rounded-md border border-primary-500/30">
+                      <Link 
+                        to={`/service/${service.id}`} 
+                        className="text-xs bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 px-3 py-1 rounded-md border border-primary-500/30"
+                        data-action="view-details"
+                      >
                         View Details
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

@@ -1,5 +1,5 @@
 // src/pages/VerificationPage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MLCaptchaChallenge from '../components/ml-captcha/MLCaptchaChallenge';
 import AIStatus from '../components/web3/AIStatus';
@@ -100,6 +100,22 @@ const VerificationPage: React.FC = () => {
     setVerificationProof(null);
     setVerificationError(null);
   };
+
+  // Функция для перехода к маркетплейсу
+  const goToMarketplace = () => {
+    navigate('/marketplace', { replace: true });
+  };
+
+  // Эффект для автоматического перехода после успешной верификации
+  useEffect(() => {
+    if (currentStep === 'complete' && isLoggedIn) {
+      const timer = setTimeout(() => {
+        navigate('/marketplace', { replace: true });
+      }, 2000); // Небольшая задержка для отображения сообщения об успехе
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, isLoggedIn, navigate]);
 
   return (
     <Container size="lg" className="py-8" dataComponent="verification-page">
@@ -342,7 +358,7 @@ const VerificationPage: React.FC = () => {
                 
                 <div className="mt-4 space-x-4">
                   <button
-                    onClick={() => navigate('/marketplace')}
+                    onClick={goToMarketplace}
                     className="ai-button text-sm"
                     data-action="go-to-marketplace"
                   >

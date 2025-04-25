@@ -202,6 +202,47 @@ export class ContractService {
       throw error;
     }
   }
+  
+  // Claim AINET tokens from AINETBridge using merkle proof
+  public async claimTokens(merkleProof: string): Promise<any> {
+    if (!this.signer) {
+      throw new Error('Signer not initialized');
+    }
+    
+    try {
+      // Define ABI for AINETBridge contract
+      const ainetBridgeABI = [
+        'function mintAndTransfer(bytes32 balanceHash, address recipient) external',
+        'function claimTokens(bytes merkleProof) external returns (bool)'
+      ];
+      
+      // AINETBridge contract address
+      const ainetBridgeAddress = '0x947351C618dbd551E12dDC0908ec0869eDD49937'; // Use actual address
+      
+      // Create contract instance
+      const ainetBridgeContract = new ethers.Contract(
+        ainetBridgeAddress,
+        ainetBridgeABI,
+        this.signer
+      );
+      
+      // Convert merkle proof to bytes format if it's not already
+      const proofBytes = ethers.isHexString(merkleProof) 
+        ? merkleProof 
+        : ethers.toUtf8Bytes(merkleProof);
+      
+      console.log('Claiming tokens with proof:', merkleProof);
+      
+      // Call claimTokens function
+      const tx = await ainetBridgeContract.claimTokens(proofBytes);
+      console.log('Claim transaction sent:', tx.hash);
+      
+      return tx;
+    } catch (error) {
+      console.error('Error claiming tokens:', error);
+      throw error;
+    }
+  }
 }
 
 // Экспортируем экземпляр сервиса

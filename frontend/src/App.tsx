@@ -1,20 +1,22 @@
 // src/App.tsx
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
 import { Web3Provider } from './contexts/Web3Context';
 import { AppProvider } from './contexts/AppContext';
-import Header from './components/layout/Header';
 import VerificationPage from './pages/VerificationPage';
 import MarketplacePage from './pages/MarketplacePage';
 import ServiceDetailsPage from './pages/ServiceDetailsPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
+import AccountPage from './pages/AccountPage';
+import LoginButton from './components/auth/LoginButton';
 import AIInstructions from './components/AIInstructions';
 import { Container } from './components/ui/Container';
 
 function App() {
   const [pageLoadTime, _setPageLoadTime] = useState<number>(Date.now());
   const [isAIAgent, setIsAIAgent] = useState<boolean>(false);
+  const [isNetworkActive, setIsNetworkActive] = useState<boolean>(true);
   
   // Attempt to detect whether the user is an AI agent
   useEffect(() => {
@@ -43,6 +45,17 @@ function App() {
     // Initialize application environment
     document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.setAttribute('data-ai-ready', 'true');
+  }, []);
+
+  // Simulate network status check
+  useEffect(() => {
+    // In a real app, this would check API availability
+    const checkInterval = setInterval(() => {
+      // Random network status for simulation
+      setIsNetworkActive(Math.random() > 0.05); // 5% chance of being "inactive" for demo
+    }, 30000);
+
+    return () => clearInterval(checkInterval);
   }, []);
 
   return (
@@ -99,16 +112,54 @@ function App() {
               </div>
             )}
             
-            <Header />
+            {/* Header */}
+            <header className="border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm sticky top-0 z-10">
+              <div className="flex justify-between items-center px-6 py-3 max-w-screen-xl mx-auto">
+                {/* Logo and Network Status */}
+                <div className="flex items-center">
+                  <Link to="/" className="flex items-center">
+                    <div className="relative">
+                      <div className={`bg-teal-500/30 border border-teal-500/40 text-teal-300 font-mono py-1.5 px-3 rounded flex items-center mr-4 ${isNetworkActive ? 'shadow-glow-teal' : ''}`}>
+                        <span className="font-bold tracking-wider">AI-ONLY NETWORK</span>
+                      </div>
+                      
+                      {/* Network status indicator */}
+                      {isNetworkActive && (
+                        <span className="absolute left-[-8px] top-1/2 transform -translate-y-1/2 h-2.5 w-2.5 bg-teal-400 rounded-full animate-pulse" 
+                              data-network-status="active"></span>
+                      )}
+                    </div>
+                  </Link>
+                  
+                  {/* Network status timestamp */}
+                  <div className="hidden md:flex text-xs text-gray-500 ml-2">
+                    <span className="mr-1">●</span>
+                    <span>
+                      {isNetworkActive 
+                        ? <span data-status-text="active">NETWORK ACTIVE</span> 
+                        : <span className="text-red-400" data-status-text="inactive">NETWORK INACTIVE</span>
+                      }
+                    </span>
+                    <span className="hidden lg:inline ml-4">{new Date().toISOString()}</span>
+                  </div>
+                </div>
+                
+                {/* Auth Section */}
+                <div className="flex items-center space-x-4">
+                  {/* Login Button - Primary Authentication Method */}
+                  <LoginButton />
+                </div>
+              </div>
+            </header>
             
-            <main className="pb-12">
+            <main className="min-h-screen bg-gray-900">
               <Routes>
-                <Route path="/" element={<VerificationPage />} />
+                <Route path="/" element={<Navigate to="/verification" replace />} />
                 <Route path="/verification" element={<VerificationPage />} />
                 <Route path="/marketplace" element={<MarketplacePage />} />
                 <Route path="/service/:id" element={<ServiceDetailsPage />} />
                 <Route path="/orders" element={<OrderHistoryPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="/account" element={<AccountPage />} />
               </Routes>
             </main>
             
